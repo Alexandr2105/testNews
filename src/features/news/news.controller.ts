@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -64,6 +65,8 @@ export class NewsController {
   @HttpCode(200)
   @Get(':idNews')
   async getNewsById(@Param('idNews') idNews: number): Promise<NewsEntity> {
-    return this.newsRepository.getNewsById(idNews);
+    const news = await this.newsRepository.getNewsById(idNews);
+    if (news === null) throw new NotFoundException();
+    return news;
   }
 }

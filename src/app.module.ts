@@ -21,6 +21,8 @@ import { NewsRepository } from './features/news/news.repository';
 import { UpdateNewsUseCase } from './features/news/application/useCases/update.news.use-case';
 import { DeleteNewsUseCase } from './features/news/application/useCases/delete.news.use-case';
 import { GetInformationAboutUserUseCase } from './features/news/application/useCases/get.information.about.user.use-case';
+import { TestingRepository } from './testing/testing.repository';
+import { TestingController } from './testing/testing.controller';
 
 const entities = [UserEntity, NewsEntity];
 const strategies = [LocalStrategy, JwtStrategy, RefreshStrategy];
@@ -31,7 +33,7 @@ const useCases = [
   DeleteNewsUseCase,
   GetInformationAboutUserUseCase,
 ];
-const repositories = [UsersRepository, NewsRepository];
+const repositories = [UsersRepository, NewsRepository, TestingRepository];
 
 @Module({
   imports: [
@@ -55,7 +57,12 @@ const repositories = [UsersRepository, NewsRepository];
     JwtModule.register({}),
     CqrsModule,
   ],
-  controllers: [AppController, AuthController, NewsController],
+  controllers: [
+    AppController,
+    AuthController,
+    NewsController,
+    TestingController,
+  ],
   providers: [
     AppService,
     Jwt,
