@@ -41,7 +41,7 @@ const repositories = [UsersRepository, NewsRepository, TestingRepository];
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
-        ssl: true,
+        // ssl: true,
         host: configService.get('POSTGRES_HOST'),
         port: configService.get('POSTGRES_PORT'),
         username: configService.get('POSTGRES_USERNAME'),

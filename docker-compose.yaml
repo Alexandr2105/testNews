@@ -1,0 +1,63 @@
+version: '3.5'
+
+services:
+  #Название сервиса
+  db:
+    #Образ
+    image: postgres
+    #Политика перезапуска
+    restart: always
+    #env переменные
+    #Можно выгрузить из .env
+    #env_file:
+    # -.env
+    environment:
+      - POSTGRES_PASSWORD=mysupersecretpassword
+    #Название контейнера
+    container_name: postgres
+    #Тома для постоянного хранения данных(при перезапуске не удаляются)
+    volumes:
+      - ./pgdata:var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+    #Сети к которым подключен контейнер
+    networks:
+      - nest-docker-compose-example-network
+
+#Название сервиса
+  app:
+    #Указываем конфигурацию сборки для создания образа контейнера из исходного кода
+    build:
+      #Определяет либо путь к каталогу в котором есть dockerfile, либо url адрес репозитория git
+      context: .
+      #Название файла
+      dockerfile: Dockerfile
+    #Название контейнера
+    container_name: example
+    #env переменные, db это название контейнера, который мы создали выше,
+    #postgres port тот же что угазали выше
+    #app port порт по которому мы подключаемся к приложению
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=mysupersecretpassword
+      - APP_PORT=3000
+
+    ports:
+      - '3000:3000'
+    #Порядок запуска, сначала db потом app
+    depends_on:
+      - db
+    #Тома для постоянного хранения данных (при перезборке не удаляются)
+    volumes:
+      - ./src:/app/src
+      #Сети к которым подключен контейнер
+    networks:
+      - nest-docker-compose-example-network
+
+#Определяем сеть для наших контейнеров
+networks:
+  nest-docker-compose-example-network:
+    driver: bridge
+
+#Для запуска используем docker-compose up
